@@ -1,4 +1,5 @@
 # web_practice6
+newbee-mall by vue
 
 ## Project setup
 ```
