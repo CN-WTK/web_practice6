@@ -33,8 +33,6 @@
           class="avatar-uploader"
           :action="uploadImgServer"
           accept="jpg,jpeg,png"
-          :before-upload="handleBeforeUpload"
-          :on-success="handleUrlSuccess"
         >
           <img style="width: 100px; height: 100px; border: 1px solid #e9e9e9;" v-if="goodForm.goodsCoverImg" :src="goodForm.goodsCoverImg" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -51,12 +49,14 @@
 </template>
 
 <script>
+import ElementUI from 'element-ui'
+import axios from '../utils/axios'
 export default {
   name: 'Add',
   components: {
    },
   data() {
-  return {
+    return {
       defaultCate: '',
       goodForm: {
         goodsName: '',
@@ -84,13 +84,50 @@ export default {
         goodsCoverImg: [
           { required: true, message: '请上传主图', trigger: 'change' }
         ],
-      }}
+      },
+      uploadImgServer: '',
+      category: {
+        lazy: true,
+        lazyLoad(node, resolve) {
+          const { level = 0, value } = node
+          axios.get('/api/categories', {
+            params: {
+              pageNumber: 1,
+              pageSize: 1000,
+              categoryLevel: level + 1,
+              parentId: value || 0
+            }
+          }).then(res => {
+            const list = res.list
+            const nodes = list.map(item => ({
+              value: item.categoryId,
+              label: item.categoryName,
+              leaf: level > 1
+            }))
+            resolve(nodes)
+          })
+        }
+      }
+    }
   },  
   methods: {
+    handleBeforeUpload(file) {
+      const sufix = file.name.split('.')[1] || ''
+      if (!['jpg', 'jpeg', 'png'].includes(sufix)) {
+        ElementUI.Message.error('请上传 jpg、jpeg、png 格式的图片')
+        return false
+      }
+    },
+    handleUrlSuccess(val) {
+      this.goodForm.goodsCoverImg = val.data || ''
+    },
+    handleChangeCate(val) {
+      this.categoryId = val[2] || 0
+    },
     submitAdd(goodForm){
       this.$refs[goodForm].validate((valid) => {
         if (valid) {
-          alert('成功创建');
+          ElementUI.Message.error('成功创建');
         } 
         })
      }

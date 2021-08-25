@@ -33,6 +33,7 @@
         </el-button>
       </template>
     </Table>
+    <SwiperDialog ref='addGood' :dialogPara="dialogPara"/>
   </div>
 </template>
 
@@ -41,9 +42,11 @@
 import axios from 'axios'
 import ElementUI from 'element-ui'
 import Table from '../components/Table'
+import SwiperDialog from '../components/SwiperDialog'
 export default {
   components: {
-    Table
+    Table,
+    SwiperDialog
   },
   data() {
     return{
@@ -78,6 +81,10 @@ export default {
         total: 0,
         currentPage: 1,
         pageSize: 10,
+      },
+      dialogPara: {
+        configType: 3,
+        visible: false
       }
     }
   },
