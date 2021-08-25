@@ -50,7 +50,6 @@
 
 <script>
 import ElementUI from 'element-ui'
-import axios from '../utils/axios'
 export default {
   name: 'Add',
   components: {
@@ -87,26 +86,6 @@ export default {
       },
       uploadImgServer: '',
       category: {
-        lazy: true,
-        lazyLoad(node, resolve) {
-          const { level = 0, value } = node
-          axios.get('/api/categories', {
-            params: {
-              pageNumber: 1,
-              pageSize: 1000,
-              categoryLevel: level + 1,
-              parentId: value || 0
-            }
-          }).then(res => {
-            const list = res.list
-            const nodes = list.map(item => ({
-              value: item.categoryId,
-              label: item.categoryName,
-              leaf: level > 1
-            }))
-            resolve(nodes)
-          })
-        }
       }
     }
   },  
