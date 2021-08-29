@@ -2,9 +2,8 @@
   <div>
     <Table
       :tableHeader="tableHeader"
-      :tableData="tableData"
-      :page="page"
-      @currentChange="handleCurrentChange"
+      :axiosParams="axiosParams"
+      :axiosUrl="axiosUrl"
     >
       <template #header-buttons>
         <div class="buttons">
@@ -39,7 +38,6 @@
 
 
 <script>
-import axios from 'axios'
 import ElementUI from 'element-ui'
 import Table from '../components/Table'
 import SwiperDialog from '../components/SwiperDialog'
@@ -76,39 +74,16 @@ export default {
           width: "200",
         }
       ],
-      tableData: [],
-      page: {
-        total: 0,
-        currentPage: 1,
-        pageSize: 10,
+      axiosUrl: '/api/carousels',
+      axiosParams:{
+
       },
       dialogPara: {
-        configType: 3,
         visible: false
       }
     }
   },
-  created() {
-    this.getCategory()
-  },
   methods: {
-    getCategory() {
-      axios.get('/api/carousels', {
-        params: {
-          pageNumber: this.page.currentPage,
-          pageSize: this.page.pageSize,
-        }
-      }).then(res => {
-        this.tableData = res.list
-        this.page.total = res.totalCount
-        this.page.currentPage = res.currPage
-      })
-    },
-    handleCurrentChange(val){
-      this.page.currentPage = val;
-      this.getCategory();
-      console.log(this.page.currentPage);
-    },
     handleDelete() {
       ElementUI.Message.success('删除成功')
     }

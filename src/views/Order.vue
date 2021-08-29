@@ -1,9 +1,8 @@
 <template>
   <Table
     :tableHeader="tableHeader"
-    :tableData="tableData"
-    :page="page"
-    @currentChange="handleCurrentChange"
+    :axiosParams="axiosParams"
+    :axiosUrl="axiosUrl"
   >
     <template #header-buttons>
       <el-input
@@ -34,7 +33,6 @@
 
 
 <script>
-import axios from 'axios'
 import Table from '../components/Table'
 export default {
   components: {
@@ -96,37 +94,15 @@ export default {
         value: -3,
         label: '商家关闭'
       }],
-      tableData: [],
       orderNo: '',
       orderStatus: '',
-      page: {
-        total: 0,
-        currentPage: 1,
-        pageSize: 10
+      axiosUrl: '/api/orders',
+      axiosParams:{
       }
     }
   },
-  created() {
-    this.getCategory()
-  },
   methods: {
-    getCategory() {
-      axios.get('/api/orders', {
-        params: {
-          pageNumber: this.page.currentPage,
-          pageSize: this.page.pageSize,
-        }
-      }).then(res => {
-        this.tableData = res.list
-        this.page.total = res.totalCount
-        this.page.currentPage = res.currPage
-      })
-    },
-    handleCurrentChange(val){
-      this.page.currentPage = val;
-      this.getCategory();
-      console.log(this.page.currentPage);
-    },
+
   }
 }
 </script>

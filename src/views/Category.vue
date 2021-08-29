@@ -1,9 +1,8 @@
 <template>
   <Table
     :tableHeader="tableHeader"
-    :tableData="tableData"
-    :page="page"
-    @currentChange="handleCurrentChange"
+    :axiosParams="axiosParams"
+    :axiosUrl="axiosUrl"
   >
     <template #header-buttons>
       <el-button type="primary" size="small">
@@ -31,7 +30,6 @@
 
 
 <script>
-import axios from 'axios'
 import Table from '../components/Table'
 export default {
   components: {
@@ -59,38 +57,15 @@ export default {
             width: "200",
           }
       ],
-      tableData: [],
-      page: {
-        total: 0,
-        currentPage: 1,
-        pageSize: 10,
+      axiosUrl: '/api/categories',
+      axiosParams:{
+        categoryLevel: 1,
+        parentId: 0
       }
     }
   },
-  created() {
-    this.getCategory()
-  },
   methods: {
-    getCategory() {
-      const level = 1, parent_id = 0
-      axios.get('/api/categories', {
-        params: {
-          pageNumber: this.page.currentPage,
-          pageSize: this.page.pageSize,
-          categoryLevel: level,
-          parentId: parent_id
-        }
-      }).then(res => {
-        this.tableData = res.list
-        this.page.total = res.totalCount
-        this.page.currentPage = res.currPage
-      })
-    },
-    handleCurrentChange(val){
-      this.page.currentPage = val;
-      this.getCategory();
-      console.log(this.page.currentPage);
-    },
+    
   }
 }
 </script>

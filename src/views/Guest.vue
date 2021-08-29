@@ -1,9 +1,8 @@
 <template>
   <Table
     :tableHeader="tableHeader"
-    :tableData="tableData"
-    :page="page"
-    @currentChange="handleCurrentChange"
+    :axiosParams="axiosParams"
+    :axiosUrl="axiosUrl"
   >
     <template #header-buttons>
       <el-button type="primary" size="small">
@@ -28,7 +27,6 @@
 
 
 <script>
-import axios from 'axios'
 import Table from '../components/Table'
 export default {
   components: {
@@ -62,36 +60,13 @@ export default {
           label: '注册时间'
         }
       ],
-      tableData: [],
-      page: {
-        total: 0,
-        currentPage: 1,
-        pageSize: 10,
-        operation: false
+      axiosUrl: '/api/users',
+      axiosParams:{
       }
     }
   },
-  created() {
-    this.getCategory()
-  },
   methods: {
-    getCategory() {
-      axios.get('/api/users', {
-        params: {
-          pageNumber: this.page.currentPage,
-          pageSize: this.page.pageSize,
-        }
-      }).then(res => {
-        this.tableData = res.list
-        this.page.total = res.totalCount
-        this.page.currentPage = res.currPage
-      })
-    },
-    handleCurrentChange(val){
-      this.page.currentPage = val;
-      this.getCategory();
-      console.log(this.page.currentPage);
-    },
+
   }
 }
 </script>

@@ -60,12 +60,13 @@
 </template>
 
 <script>
+import axios from '../utils/axios'
 export default {
   name: 'Table',
   props: {
-    tableData: Array,
     tableHeader: Array,
-    page: Object,
+    axiosUrl: String,
+    axiosParams: Object,
   },
   data() {
     return {
@@ -80,15 +81,40 @@ export default {
         {value: -2, label: '超时关闭'}, 
         {value: -3, label: '商家关闭'}
       ],
+      tableData: [],
+      page: {
+        total: 0,
+        currentPage: 1,
+        pageSize: 10
+      },
       that: this
     }
   },
+
+  created() {
+    this.getCategory()
+  },
+  
   methods: {
+    getCategory() {
+      const params = this.axiosParams
+      params.pageNumber = this.page.currentPage
+      params.pageSize = this.page.pageSize
+      axios.get(this.axiosUrl, {
+        params: params
+      }).then(res => {
+        this.tableData = res.list
+        this.page.total = res.totalCount
+        this.page.currentPage = res.currPage
+      })
+    },
     handleCurrentChange(val){
-      this.$emit("currentChange", val);
+      this.page.currentPage = val;
+      this.getCategory();
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+      console.log(this.multipleSelection);
     }
   },
   filters: {

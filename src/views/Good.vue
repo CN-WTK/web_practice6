@@ -1,12 +1,11 @@
 <template>
   <Table
     :tableHeader="tableHeader"
-    :tableData="tableData"
-    :page="page"
-    @currentChange="handleCurrentChange"
+    :axiosParams="axiosParams"
+    :axiosUrl="axiosUrl"
   >
     <template #header-buttons>
-      <el-button type="primary" size="small">
+      <el-button type="primary" size="small" @click="$router.push('/add')">
         <el-icon class="el-icon-plus"></el-icon>
         <span>新增商品</span>
       </el-button>
@@ -24,7 +23,6 @@
 
 
 <script>
-import axios from 'axios'
 import Table from '../components/Table'
 export default {
   components: {
@@ -73,35 +71,14 @@ export default {
           width: "200",
         }
       ],
-      tableData: [],
-      page: {
-        total: 0,
-        currentPage: 1,
-        pageSize: 10
+      axiosUrl: '/api/goods/list',
+      axiosParams:{
+
       }
     }
   },
-  created() {
-    this.getCategory()
-  },
   methods: {
-    getCategory() {
-      axios.get('/api/goods/list', {
-        params: {
-          pageNumber: this.page.currentPage,
-          pageSize: this.page.pageSize,
-        }
-      }).then(res => {
-        this.tableData = res.list
-        this.page.total = res.totalCount
-        this.page.currentPage = res.currPage
-      })
-    },
-    handleCurrentChange(val){
-      this.page.currentPage = val;
-      this.getCategory();
-      console.log(this.page.currentPage);
-    },
+
   }
 }
 </script>
