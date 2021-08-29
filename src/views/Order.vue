@@ -3,6 +3,9 @@
     :tableHeader="tableHeader"
     :axiosParams="axiosParams"
     :axiosUrl="axiosUrl"
+    :buttons="buttons"
+    :deleteButton="deleteButton"
+    @handleFinish="handleFinish"
   >
     <template #header-buttons>
       <el-input
@@ -20,9 +23,6 @@
           :value="item.value"
         />
       </el-select>
-      <el-button type="primary" size="small" icon="el-icon-s-home">配货完成</el-button>
-      <el-button type="primary" size="small" icon="el-icon-s-home">出库</el-button>
-      <el-button type="danger" size="small" icon="el-icon-delete">关闭订单</el-button>
     </template>
     <template #opeartion-buttons>
       <el-button size="mini">修改</el-button>
@@ -30,7 +30,6 @@
     </template>
   </Table>
 </template>
-
 
 <script>
 import Table from '../components/Table'
@@ -98,11 +97,35 @@ export default {
       orderStatus: '',
       axiosUrl: '/api/orders',
       axiosParams:{
-      }
+      },
+      deleteButton: false,
+      buttons:[
+        {
+          type: "primary",
+          size: "small",
+          icon: "el-icon-s-home",
+          title: "配货完成",
+          event: "handleFinish", 
+        },{
+          type: "primary",
+          size: "small",
+          icon: "el-icon-s-home",
+          title: "出库",
+          event: "", 
+        },{
+          type: "danger",
+          size: "small",
+          icon: "el-icon-delete",
+          title: "关闭订单",
+          event: "", 
+        }
+      ]
     }
   },
   methods: {
-
+    handleFinish() {
+      console.log('111')
+    }
   }
 }
 </script>

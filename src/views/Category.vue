@@ -1,39 +1,40 @@
 <template>
-  <Table
-    :tableHeader="tableHeader"
-    :axiosParams="axiosParams"
-    :axiosUrl="axiosUrl"
-  >
-    <template #header-buttons>
-      <el-button type="primary" size="small">
-        <el-icon class="el-icon-plus"></el-icon>
-        <span>增加</span>
-      </el-button>
-      <el-button type="danger" size="small">
-        <el-icon class="el-icon-delete"></el-icon>
-        <span>批量删除</span>
-      </el-button>
-    </template>
-    <template #opeartion-buttons>
-      <el-button
-        size="mini"
-        @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-      <el-button
-        size="mini"
-        @click="handleChildren(scope.$index, scope.row)">下级分类</el-button>
-      <el-button
-        size="mini"
-        @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-    </template>
-  </Table>
+  <div>
+    <Table
+      :tableHeader="tableHeader"
+      :axiosParams="axiosParams"
+      :axiosUrl="axiosUrl"
+      :buttons="buttons"
+      :deleteButton="deleteButton"
+      @handleAdd="handleAdd"
+      @handleDelete="handleDelete"
+    >
+      <template #opeartion-buttons>
+        <el-button
+          size="mini"
+          @click="handleEdit(scope.$index, scope.row)">修改</el-button>
+        <el-button
+          size="mini"
+          @click="handleChildren(scope.$index, scope.row)">下级分类</el-button>
+        <el-button
+          size="mini"
+          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+      </template>
+    </Table>
+    <CategoryDialog :dialogPara="dialogPara"/>
+  </div>
+
 </template>
 
 
 <script>
+import ElementUI from 'element-ui'
 import Table from '../components/Table'
+import CategoryDialog from '../components/CategoryDialog'
 export default {
   components: {
-    Table
+    Table,
+    CategoryDialog
   },
   data() {
     return{
@@ -61,11 +62,35 @@ export default {
       axiosParams:{
         categoryLevel: 1,
         parentId: 0
-      }
+      },
+      dialogPara: {
+        visible: false
+      },
+      deleteButton: true,
+      buttons:[
+        {
+          type: "primary",
+          size: "small",
+          icon: "el-icon-plus",
+          title: "增加",
+          event: "handleAdd", 
+        }
+      ]
     }
   },
   methods: {
-    
+    handleAdd() {
+      this.dialogPara.visible = true
+    },
+    handleDelete(val) {
+      if (val.length==0) { ElementUI.Message.error('请选择项') }
+      else{
+        ElementUI.Message.success('删除成功')
+        val.map(item=>{
+          alert(item.categoryName+'删除成功')
+        })
+      }
+    }
   }
 }
 </script>

@@ -5,17 +5,11 @@
     width="400px"
   >
     <el-form :model="ruleForm" :rules="rules" ref="addForm" label-width="100px" class="good-form">
-      <el-form-item label="商品名称" prop="name">
+      <el-form-item label="分类名称" prop="name">
         <el-input type="text" v-model="ruleForm.name"></el-input>
       </el-form-item>
-      <el-form-item label="跳转链接" prop="link">
-        <el-input type="text" v-model="ruleForm.link"></el-input>
-      </el-form-item>
-      <el-form-item label="商品编号" prop="id">
-        <el-input type="number" min="0" v-model="ruleForm.id"></el-input>
-      </el-form-item>
-      <el-form-item label="排序值" prop="sort">
-        <el-input type="number" v-model="ruleForm.sort"></el-input>
+      <el-form-item label="排序值" prop="rank">
+        <el-input type="number" max='200' v-model="ruleForm.rank"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -31,12 +25,11 @@
 import axios from '@/utils/axios'
 import ElementUI from 'element-ui'
 export default {
-  name: 'Dialog',
+  name: 'CategoryDialog',
   components: {
    },
   props: {
     dialogPara:{
-      configType: Number,
       visible: Boolean,
     }
   },
@@ -44,34 +37,29 @@ export default {
     return {
       ruleForm: {
         name: '',
-        link: '',
-        id: '',
-        sort: ''
+        rank: ''
       },
       rules: {
         name: [
           { required: 'true', message: '名称不能为空', trigger: ['change'] }
         ],
-        id: [
-          { required: 'true', message: '编号不能为空', trigger: ['change'] }
-        ],
-        sort: [
+        rank: [
           { required: 'true', message: '排序不能为空', trigger: ['change'] }
         ]
       },
-      id: ''
+      categoryLevel: 1,
+      parentId: 0,
     }
   },  
   methods: {
     submitForm() {
       this.$refs["addForm"].validate((valid) => {
         if (valid) {
-          axios.post('/api/indexConfigs', {
-            configType: this.dialogPara.configType || 3,
-            configName: this.ruleForm.name,
-            redirectUrl: this.ruleForm.link,
-            goodsId: this.ruleForm.id,
-            configRank: this.ruleForm.sort
+          axios.post('/api/categories', {
+            categoryLevel: this.categoryLevel,
+            parentId: this.parentId,
+            categoryName: this.ruleForm.name,
+            categoryRank: this.ruleForm.rank
           }).then(() => {
             ElementUI.Message.success('添加成功')
             this.dialogPara.visible = false

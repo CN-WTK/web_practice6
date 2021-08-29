@@ -4,23 +4,11 @@
       :tableHeader="tableHeader"
       :axiosParams="axiosParams"
       :axiosUrl="axiosUrl"
+      :buttons="buttons"
+      :deleteButton="deleteButton"
+      @handleAdd="handleAdd"
+      @handleDelete="handleDelete"
     >
-      <template #header-buttons>
-        <div class="buttons">
-          <el-button type="primary" size="small" @click="dialogPara.visible = true">
-            <el-icon class="el-icon-plus"></el-icon>
-            <span>增加</span>
-          </el-button>
-          <el-popconfirm
-            title="确定删除吗？"
-            @confirm="handleDelete"
-          >
-            <template #reference>
-              <el-button type="danger" size="small" icon="el-icon-delete">批量删除</el-button>
-            </template>
-          </el-popconfirm>
-        </div>
-      </template>
       <template #opeartion-buttons>
         <el-button
           size="mini"
@@ -84,21 +72,37 @@ export default {
       dialogPara: {
         configType: 3,
         visible: false
-      }
+      },
+      deleteButton: true,
+      buttons:[
+        {
+          type: "primary",
+          size: "small",
+          icon: "el-icon-plus",
+          title: "增加",
+          event: "handleAdd", 
+        }
+      ]
     }
   },
   methods: {
-    handleDelete() {
-      ElementUI.Message.success('删除成功')
+    handleAdd() {
+      this.dialogPara.visible = true
+    },
+    handleDelete(val) {
+      if (val.length==0) { 
+        ElementUI.Message.error('请选择项') 
+      }else{
+        ElementUI.Message.success('删除成功')
+        val.map(item=>{
+          alert(item.configName+'删除成功')
+        })
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-.buttons{
-  display: flex;
-  justify-content: space-between;
-  width: 180px;
-}
+
 </style>

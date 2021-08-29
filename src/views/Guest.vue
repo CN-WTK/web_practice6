@@ -3,17 +3,9 @@
     :tableHeader="tableHeader"
     :axiosParams="axiosParams"
     :axiosUrl="axiosUrl"
+    :buttons="buttons"
+    :deleteButton="deleteButton"
   >
-    <template #header-buttons>
-      <el-button type="primary" size="small">
-        <el-icon class="el-icon-plus"></el-icon>
-        <span>解除禁用</span>
-      </el-button>
-      <el-button type="danger" size="small">
-        <el-icon class="el-icon-delete"></el-icon>
-        <span>禁用账户</span>
-      </el-button>
-    </template>
     <template #opeartion-buttons>
       <el-button
         size="mini"
@@ -62,7 +54,23 @@ export default {
       ],
       axiosUrl: '/api/users',
       axiosParams:{
-      }
+      },
+      deleteButton: false,
+      buttons:[
+        {
+          type: "primary",
+          size: "small",
+          icon: "el-icon-s-plus",
+          title: "解除禁用",
+          event: "", 
+        },{
+          type: "danger",
+          size: "small",
+          icon: "el-icon-delete",
+          title: "禁用账户",
+          event: "", 
+        }
+      ]
     }
   },
   methods: {

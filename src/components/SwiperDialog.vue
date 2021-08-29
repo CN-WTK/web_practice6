@@ -27,7 +27,7 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="visible = false">取 消</el-button>
+        <el-button @click="dialogPara.visible = false">取 消</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
       </span>
     </template>

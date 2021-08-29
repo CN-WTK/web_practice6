@@ -3,13 +3,10 @@
     :tableHeader="tableHeader"
     :axiosParams="axiosParams"
     :axiosUrl="axiosUrl"
+    :buttons="buttons"
+    :deleteButton="deleteButton"
+    @handleAdd="handleAdd"
   >
-    <template #header-buttons>
-      <el-button type="primary" size="small" @click="$router.push('/add')">
-        <el-icon class="el-icon-plus"></el-icon>
-        <span>新增商品</span>
-      </el-button>
-    </template>
     <template #opeartion-buttons>
       <el-button
         size="mini"
@@ -74,11 +71,25 @@ export default {
       axiosUrl: '/api/goods/list',
       axiosParams:{
 
-      }
+      },
+      deleteButton: false,
+      buttons:[
+        {
+          type: "primary",
+          size: "small",
+          icon: "el-icon-plus",
+          title: "新增商品",
+          event: "handleAdd"
+        }
+      ]
     }
   },
-  methods: {
 
+  methods: {
+    handleAdd() {
+      this.$router.push('/add')
+    }
   }
+
 }
 </script>

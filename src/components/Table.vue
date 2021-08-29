@@ -2,6 +2,16 @@
   <el-card>
     <div slot="header" class="clearfix">
       <slot name="header-buttons"></slot>
+      <el-button v-for="item in buttons" :key="item.title" :type="item.type" :size="item.size" :icon="item.icon" @click="handleButtonEvent(item.event)">{{item.title}}</el-button>
+      <el-popconfirm v-if="deleteButton"
+        title="确定删除吗？"
+        @confirm="handleDelete"
+        style="margin-left: 10px"
+      >
+        <template #reference>
+          <el-button type="danger" size="small" icon="el-icon-delete">批量删除</el-button>
+        </template>
+      </el-popconfirm>
     </div>
     <div class="table-box">
       <el-table
@@ -67,6 +77,8 @@ export default {
     tableHeader: Array,
     axiosUrl: String,
     axiosParams: Object,
+    buttons: Array,
+    deleteButton: Boolean,
   },
   data() {
     return {
@@ -87,7 +99,34 @@ export default {
         currentPage: 1,
         pageSize: 10
       },
-      that: this
+      that: this,
+      // buttons:[
+      //   {
+      //     type: "primary",
+      //     size: "small",
+      //     icon: "el-icon-s-home",
+      //     title: "配货完成",
+      //     event: "", 
+      //   },{
+      //     type: "primary",
+      //     size: "small",
+      //     icon: "el-icon-s-home",
+      //     title: "出库",
+      //     event: "", 
+      //   },{
+      //     type: "danger",
+      //     size: "small",
+      //     icon: "el-icon-delete",
+      //     title: "关闭订单",
+      //     event: "", 
+      //   },{
+      //     type: "primary",
+      //     size: "small",
+      //     icon: "el-icon-plus",
+      //     title: "增加",
+      //     event: "handleAdd", 
+      //   }
+      // ]
     }
   },
 
@@ -109,12 +148,18 @@ export default {
       })
     },
     handleCurrentChange(val){
-      this.page.currentPage = val;
-      this.getCategory();
+      this.page.currentPage = val
+      this.getCategory()
     },
     handleSelectionChange(val) {
-      this.multipleSelection = val;
-      console.log(this.multipleSelection);
+      this.multipleSelection = val
+      console.log(this.multipleSelection)
+    },
+    handleButtonEvent(val) {
+      this.$emit(val)
+    },
+    handleDelete() {
+      this.$emit('handleDelete',this.multipleSelection)
     }
   },
   filters: {
@@ -140,5 +185,14 @@ export default {
 }
 .pagination-block{
   margin-top: 20px;
+}
+.buttons{
+  display: flex;
+  justify-content: space-between;
+  width: 180px;
+}
+.clearfix{
+  display: flex;
+  justify-content: flex-start;
 }
 </style>
