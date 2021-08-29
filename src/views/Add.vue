@@ -1,8 +1,18 @@
 <template>
   <el-card>
     <el-form :model="goodForm" :rules="rules" ref="goodForm" label-width="100px">
-      <el-form-item label="商品分类" style="text-align:left">
-        <el-cascader :placeholder="defaultCate" :props="category"  style="width:300px" @change="handleChangeCate"></el-cascader>
+      <el-form-item label="商品分类" style="text-align:left" prop="goodsCategoryId">
+        <el-select 
+          v-model="goodForm.goodsCategoryId"
+          style="width:300px" 
+        >
+          <el-option 
+          v-for="item in category" 
+          :key="item.value"
+          :label="item.label" 
+          :value="item.value"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="商品名称" style="text-align:left" prop="goodsName">
         <el-input style="width: 300px" v-model="goodForm.goodsName" placeholder="请输入商品名称"></el-input>
@@ -28,7 +38,7 @@
           <el-radio label="1">下架</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="商品主图" style="text-align: left">
+      <el-form-item label="商品主图" style="text-align: left" prop="goodsCoverImg">
         <el-upload
           class="avatar-uploader"
           :action="uploadImgServer"
@@ -39,10 +49,10 @@
         </el-upload>
       </el-form-item>
       <el-form-item label="详情内容" style="text-align: left" >
-        <div ref='editor'></div>
+        <div id='editor'></div>
       </el-form-item>
       <el-form-item style="text-align: left">
-        <el-button type="primary" @click="submitAdd(goodForm)">立即创建</el-button>
+        <el-button type="primary" @click="submitAdd('goodForm')">立即创建</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -50,14 +60,16 @@
 
 <script>
 import ElementUI from 'element-ui'
+import axios from '../utils/axios'
+import E from 'wangeditor'
 export default {
   name: 'Add',
   components: {
    },
   data() {
     return {
-      defaultCate: '',
       goodForm: {
+        goodsCategoryId: '',
         goodsName: '',
         goodsIntro: '',
         originalPrice: '',
@@ -68,6 +80,9 @@ export default {
         tag: ''
       },
       rules: {
+        goodsCategoryId: [
+          { required: true, message: '请填写商品分类', trigger: 'change'  }
+        ],
         goodsName: [
           { required: true, message: '请填写商品名称', trigger: 'blur'  }
         ],
@@ -85,10 +100,15 @@ export default {
         ],
       },
       uploadImgServer: '',
-      category: {
-      }
+      category: [],
     }
   },  
+  
+  mounted() {
+    this.getCategory()
+    this.createEditor()
+  },
+
   methods: {
     handleBeforeUpload(file) {
       const sufix = file.name.split('.')[1] || ''
@@ -103,13 +123,37 @@ export default {
     handleChangeCate(val) {
       this.categoryId = val[2] || 0
     },
-    submitAdd(goodForm){
-      this.$refs[goodForm].validate((valid) => {
+    submitAdd(formName){
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           ElementUI.Message.error('成功创建');
-        } 
-        })
-     }
+        } else {
+            console.log('error submit!!');
+            return false;
+        }
+      });
+    },
+    getCategory() {
+      const level = 1, parent_id = 0
+      axios.get('/api/categories', {
+        params: {
+          pageNumber: 1,
+          pageSize: 1000,
+          categoryLevel: level,
+          parentId: parent_id
+        }
+      }).then(res => {
+        const list = res.list
+        this.category = list.map(item => ({
+          value: item.categoryId,
+          label: item.categoryName
+        }))
+      })
+    },
+    createEditor() {
+      const editor = new E('#editor')
+      editor.create()
+    }
   }
 }
 </script>

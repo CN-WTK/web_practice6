@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container style="height: 100vh">
     <el-card>
       <div class="header">
         <img class="logo" src="https://s.weituibao.com/1582958061265/mlogo.png" />
