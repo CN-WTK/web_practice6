@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="'添加轮播图'"
+    :title="title"
     :visible.sync="dialogPara.visible"
     width="400px"
   >
@@ -42,10 +42,10 @@ export default {
   components: {
    },
   props: {
-    dialogPara:{
-      configType: Number,
-      visible: Boolean,
-    }
+    dialogPara: Object,
+  },
+  mounted() {
+    console.log(this.dialogPara);
   },
   data() {
     return {
@@ -63,7 +63,8 @@ export default {
         ]
       },
       uploadImgServer:'',
-      id: ''
+      id: '',
+      title: ''
     }
   },  
   methods: {
@@ -80,16 +81,39 @@ export default {
     submitForm() {
       this.$refs["addForm"].validate((valid) => {
         if (valid) {
-          axios.post('/api/carousels', {
-              carouselUrl: this.ruleForm.url,
-              redirectUrl: this.ruleForm.link,
-              carouselRank: this.ruleForm.sort
-            }).then(() => {
-              ElementUI.Message.success('添加成功')
-              this.dialogPara.visible = false
-          })
+          if (this.dialogPara.type=='add'){
+            axios.post('/api/carousels', {
+                carouselUrl: this.ruleForm.url,
+                redirectUrl: this.ruleForm.link,
+                carouselRank: this.ruleForm.sort
+              }).then(() => {
+                ElementUI.Message.success('添加成功')
+                this.dialogPara.visible = false
+            })
+          } else {
+            axios.put('/api/carousels', {
+                carouselId: this.id,
+                carouselUrl: this.ruleForm.url,
+                redirectUrl: this.ruleForm.link,
+                carouselRank: this.ruleForm.sort
+              }).then(() => {
+                ElementUI.Message.success('修改成功')
+                this.dialogPara.visible = false
+            })
+          }
         }
       })
+    },
+    formDefault(val) {
+      this.ruleForm.url=val.carouselUrl
+      this.ruleForm.link=val.redirectUrl
+      this.ruleForm.sort=val.carouselRank
+      this.id=val.carouselId
+      if (this.dialogPara.type == 'add') {
+        this.title = '添加轮播图'
+      } else {
+        this.title = '修改轮播图'
+      }
     }
   }
 }

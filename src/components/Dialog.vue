@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="'添加商品'"
+    :title="title"
     :visible.sync="dialogPara.visible"
     width="400px"
   >
@@ -35,10 +35,7 @@ export default {
   components: {
    },
   props: {
-    dialogPara:{
-      configType: Number,
-      visible: Boolean,
-    }
+    dialogPara: Object,
   },
   data() {
     return {
@@ -59,25 +56,52 @@ export default {
           { required: 'true', message: '排序不能为空', trigger: ['change'] }
         ]
       },
-      id: ''
+      id: '',
+      title: ''
     }
   },  
   methods: {
     submitForm() {
       this.$refs["addForm"].validate((valid) => {
         if (valid) {
-          axios.post('/api/indexConfigs', {
-            configType: this.dialogPara.configType || 3,
-            configName: this.ruleForm.name,
-            redirectUrl: this.ruleForm.link,
-            goodsId: this.ruleForm.id,
-            configRank: this.ruleForm.sort
-          }).then(() => {
-            ElementUI.Message.success('添加成功')
-            this.dialogPara.visible = false
-          })
+          if (this.dialogPara.type=='add'){
+            axios.post('/api/indexConfigs', {
+              configType: this.dialogPara.configType || 3,
+              configName: this.ruleForm.name,
+              redirectUrl: this.ruleForm.link,
+              goodsId: this.ruleForm.id,
+              configRank: this.ruleForm.sort
+            }).then(() => {
+              ElementUI.Message.success('添加成功')
+              this.dialogPara.visible = false
+            })
+          } else {
+            axios.put('/api/indexConfigs', {
+              configId: this.id,
+              configType: this.dialogPara.configType || 3,
+              configName: this.ruleForm.name,
+              redirectUrl: this.ruleForm.link,
+              goodsId: this.ruleForm.id,
+              configRank: this.ruleForm.sort
+            }).then(() => {
+              ElementUI.Message.success('修改成功')
+              this.dialogPara.visible = false
+            })
+          }
         }
       })
+    },
+    formDefault(val) {
+        this.ruleForm.name=val.configName
+        this.ruleForm.link=val.redirectUrl
+        this.ruleForm.id=val.goodsId
+        this.ruleForm.sort=val.configRank
+        this.id=val.configId
+        if (this.dialogPara.type == 'add') {
+          this.title = '添加商品'
+        } else {
+          this.title = '修改商品'
+        }
     }
   }
 }

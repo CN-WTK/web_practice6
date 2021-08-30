@@ -8,20 +8,11 @@
       :deleteButton="deleteButton"
       @handleAdd="handleAdd"
       @handleDelete="handleDelete"
+      @handelReviseItem="handelReviseItem"
+      @handelDeleteItem="handelDeleteItem"
     >
-      <template #opeartion-buttons>
-        <el-button
-          size="mini"
-          @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-        <el-button
-          size="mini"
-          @click="handleChildren(scope.$index, scope.row)">下级分类</el-button>
-        <el-button
-          size="mini"
-          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-      </template>
     </Table>
-    <CategoryDialog :dialogPara="dialogPara"/>
+    <CategoryDialog ref='addCategory' :dialogPara="dialogPara"/>
   </div>
 
 </template>
@@ -39,24 +30,30 @@ export default {
   data() {
     return{
       tableHeader: [
-          {
-            type: 'selection',
-            width: "55",
-          },
-          {
-            prop: 'categoryName',
-            label: '分类名称',
-          },
-          {
-            prop: 'categoryRank',
-            label: '排序值',
-            width: "120",
-          },
-          {
-            prop: 'createTime',
-            label: '添加时间',
-            width: "200",
-          }
+        {
+          type: 'selection',
+          width: "55",
+        },{
+          prop: 'categoryName',
+          label: '分类名称',
+        },{
+          prop: 'categoryRank',
+          label: '排序值',
+          width: "120",
+        },{
+          prop: 'createTime',
+          label: '添加时间',
+          width: "200",
+        },{
+          content: 'operationButtons',
+          label: '操作',
+          width: "240",
+          buttons:[
+            {title: '修改', event:'handelReviseItem'},
+            {title: '下级目录', event:''},
+            {title: '删除', event:'handelDeleteItem'}
+          ]
+        }
       ],
       axiosUrl: '/api/categories',
       axiosParams:{
@@ -80,7 +77,9 @@ export default {
   },
   methods: {
     handleAdd() {
+      this.dialogPara.type = 'add'
       this.dialogPara.visible = true
+      this.$refs.addCategory.formDefault({})
     },
     handleDelete(val) {
       if (val.length==0) { ElementUI.Message.error('请选择项') }
@@ -90,6 +89,14 @@ export default {
           alert(item.categoryName+'删除成功')
         })
       }
+    },
+    handelReviseItem(row) {
+      this.dialogPara.type = 'revise'
+      this.dialogPara.visible = true
+      this.$refs.addCategory.formDefault(row)
+    },
+    handelDeleteItem(row) {
+      ElementUI.Message.success(row.categoryName+'删除成功')
     }
   }
 }

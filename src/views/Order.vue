@@ -24,10 +24,6 @@
         />
       </el-select>
     </template>
-    <template #opeartion-buttons>
-      <el-button size="mini">修改</el-button>
-      <el-button size="mini">下架</el-button>
-    </template>
   </Table>
 </template>
 
@@ -43,26 +39,29 @@ export default {
         {
           type: 'selection',
           width: "55",
-        },
-        {
+        },{
           prop: 'orderNo',
           label: '订单号'
-        },
-        {
+        },{
           prop: 'totalPrice',
           label: '订单总价'
-        },
-        {
+        },{
           content: 'orderStatus',
           label: '订单状态'
-        },
-        {
+        },{
           content: 'payType',
           label: '支付方式'
-        },
-        {
+        },{
           prop: 'createTime',
           label: '注册时间'
+        },{
+          content: 'operationButtons',
+          label: '操作',
+          width: "240",
+          buttons:[
+            {title: '关闭订单', event:'handelReviseItem'},
+            {title: '订单详情', event:'handelDeleteItem'}
+          ]
         }
       ],
       options: [{

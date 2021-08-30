@@ -33,6 +33,7 @@
             <img v-if="item.content=='swiperImage'" style="width: 150px;height: 150px" :src="scope.row.carouselUrl" :alt="item.altName">
             <img v-else-if="item.content=='goodsImage'" style="width: 100px;height: 100px" :src="scope.row.goodsCoverImg" :alt="item.altName">
             <a v-if="item.content=='link'" target="_blank" :href="scope.row.redirectUrl">{{ scope.row.redirectUrl }}</a>
+            <a v-show="item.content=='operationButtons'" href="javascript:;" v-for="subItem in item.buttons" :key="subItem.title" style="margin-right: 10px" @click="handelRow(subItem.event, scope.row)">{{subItem.title}}</a>
             <span style="color: green;" v-if="item.content=='goodsSellStatus'&&scope.row.goodsSellStatus == 0">销售中</span>
             <span style="color: red;" v-else-if="item.content=='goodsSellStatus'&&scope.row.goodsSellStatus == 1">已下架</span>
             <span style="color: green;" v-if="item.content=='lockedFlag'&&scope.row.lockedFlag == 0">正常</span>
@@ -43,15 +44,6 @@
             <span v-if="item.content=='payType'&&scope.row.payType == 1">微信支付</span>
             <span v-else-if="item.content=='payType'&&scope.row.payType == 2">支付宝支付</span>
             <span v-else-if="item.content=='payType'&&scope.row.payType == 0">未支付</span>
-          </template>
-        </el-table-column>
-        <el-table-column 
-          label="操作"
-          width="240"
-          v-if="page.operation==undefined"
-        >
-          <template>
-            <slot name="opeartion-buttons"></slot>
           </template>
         </el-table-column>
       </el-table>
@@ -157,6 +149,9 @@ export default {
     },
     handleButtonEvent(val) {
       this.$emit(val)
+    },
+    handelRow(event, index, row) {
+      this.$emit(event, index, row)
     },
     handleDelete() {
       this.$emit('handleDelete',this.multipleSelection)

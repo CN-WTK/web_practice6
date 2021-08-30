@@ -31,41 +31,42 @@ export default {
         {
           type: 'selection',
           width: "55",
-        },
-        {
+        },{
           prop: 'goodsId',
           label: '商品编号',
           width: "200",
-        },
-        {
+        },{
           prop: 'goodsName',
           label: '商品名',
           width: "200",
-        },
-        {
+        },{
           prop: 'goodsIntro',
           label: '商品简介',
           width: "200",
-        },
-        {
+        },{
           content: 'goodsImage',
           label: '商品图片',
           altName: '商品图片',
-        },
-        {
+        },{
           prop: 'stockNum',
           label: '商品库存',
           width: "200",
-        },
-        {
+        },{
           prop: 'sellingPrice',
           label: '商品售价',
           width: "200",
-        },
-        {
+        },{
           content: 'goodsSellStatus',
           label: '上架状态',
           width: "200",
+        },{
+          content: 'operationButtons',
+          label: '操作',
+          width: "240",
+          buttons:[
+            {title: '修改', event:'handelReviseItem'},
+            {title: '上架', event:'handelDeleteItem'}
+          ]
         }
       ],
       axiosUrl: '/api/goods/list',

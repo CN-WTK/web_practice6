@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="'添加商品'"
+    :title="title"
     :visible.sync="dialogPara.visible"
     width="400px"
   >
@@ -29,9 +29,7 @@ export default {
   components: {
    },
   props: {
-    dialogPara:{
-      visible: Boolean,
-    }
+    dialogPara: Object,
   },
   data() {
     return {
@@ -49,23 +47,47 @@ export default {
       },
       categoryLevel: 1,
       parentId: 0,
+      title: '',
     }
   },  
   methods: {
     submitForm() {
       this.$refs["addForm"].validate((valid) => {
         if (valid) {
-          axios.post('/api/categories', {
-            categoryLevel: this.categoryLevel,
-            parentId: this.parentId,
-            categoryName: this.ruleForm.name,
-            categoryRank: this.ruleForm.rank
-          }).then(() => {
-            ElementUI.Message.success('添加成功')
-            this.dialogPara.visible = false
-          })
+          if (this.dialogPara.type=='add'){
+            axios.post('/api/categories', {
+              categoryLevel: this.categoryLevel,
+              parentId: this.parentId,
+              categoryName: this.ruleForm.name,
+              categoryRank: this.ruleForm.rank
+            }).then(() => {
+              ElementUI.Message.success('添加成功')
+              this.dialogPara.visible = false
+            })
+          } else {
+            axios.put('/api/categories', {
+              categoryId: this.id,
+              categoryLevel: this.categoryLevel,
+              parentId: this.parentId,
+              categoryName: this.ruleForm.name,
+              categoryRank: this.ruleForm.rank
+            }).then(() => {
+              ElementUI.Message.success('修改成功')
+              this.dialogPara.visible = false
+            })
+          }
         }
       })
+    },
+    formDefault(val) {
+      this.ruleForm.name=val.categoryName
+      this.ruleForm.rank=val.categoryRank
+      this.id=val.categoryId
+      if (this.dialogPara.type == 'add') {
+        this.title = '添加商品'
+      } else {
+        this.title = '修改商品'
+      }
     }
   }
 }

@@ -6,14 +6,6 @@
     :buttons="buttons"
     :deleteButton="deleteButton"
   >
-    <template #opeartion-buttons>
-      <el-button
-        size="mini"
-        @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-      <el-button
-        size="mini"
-        @click="handleChildren(scope.$index, scope.row)">下架</el-button>
-    </template>
   </Table>
 </template>
 

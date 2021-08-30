@@ -8,17 +8,9 @@
       :deleteButton="deleteButton"
       @handleAdd="handleAdd"
       @handleDelete="handleDelete"
+      @handelReviseItem="handelReviseItem"
+      @handelDeleteItem="handelDeleteItem"
     >
-      <template #opeartion-buttons>
-        <el-button
-          size="mini"
-          @click="handleEdit(scope.$index, scope.row)">修改
-        </el-button>
-        <el-button
-          size="mini"
-          @click="handleDelete(scope.$index, scope.row)">删除
-        </el-button>
-      </template>
     </Table>
     <Dialog ref='addGood' :dialogPara="dialogPara"/>
   </div>
@@ -37,33 +29,36 @@ export default {
   data() {
     return{
       tableHeader: [
-          {
-            type: 'selection',
-            width: "55",
-          },
-          {
-            prop: 'configName',
-            label: '商品名称',
-          },
-          {
-            content: 'link',
-            label: '跳转链接',
-          },
-          {
-            prop: 'configRank',
-            label: '排序值',
-            width: "120",
-          },
-          {
-            prop: 'goodsId',
-            label: '商品编号',
-            width: "200",
-          },
-          {
-            prop: 'createTime',
-            label: '添加时间',
-            width: "200",
-          }
+        {
+          type: 'selection',
+          width: "55",
+        },{
+          prop: 'configName',
+          label: '商品名称',
+        },{
+          content: 'link',
+          label: '跳转链接',
+        },{
+          prop: 'configRank',
+          label: '排序值',
+          width: "120",
+        },{
+          prop: 'goodsId',
+          label: '商品编号',
+          width: "200",
+        },{
+          prop: 'createTime',
+          label: '添加时间',
+          width: "200",
+        },{
+          content: 'operationButtons',
+          label: '操作',
+          width: "240",
+          buttons:[
+            {title: '修改', event:'handelReviseItem'},
+            {title: '删除', event:'handelDeleteItem'}
+          ]
+        }
       ],
       axiosUrl: '/api/indexConfigs',
       axiosParams:{
@@ -87,7 +82,9 @@ export default {
   },
   methods: {
     handleAdd() {
+      this.dialogPara.type = 'add'
       this.dialogPara.visible = true
+      this.$refs.addGood.formDefault({})
     },
     handleDelete(val) {
       if (val.length==0) { ElementUI.Message.error('请选择项') }
@@ -97,6 +94,14 @@ export default {
           alert(item.configName+'删除成功')
         })
       }
+    },
+    handelReviseItem(row) {
+      this.dialogPara.type = 'revise'
+      this.dialogPara.visible = true
+      this.$refs.addGood.formDefault(row)
+    },
+    handelDeleteItem(row) {
+      ElementUI.Message.success(row.configName+'删除成功')
     }
   }
 }
