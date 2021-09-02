@@ -2,7 +2,16 @@
   <el-card>
     <div slot="header" class="clearfix">
       <slot name="header-buttons"></slot>
-      <el-button v-for="item in buttons" :key="item.title" :type="item.type" :size="item.size" :icon="item.icon" @click="handleButtonEvent(item.event)">{{item.title}}</el-button>
+      <el-button 
+        v-for="item in buttons" 
+        :key="item.title" 
+        :type="item.type" 
+        :size="item.size" 
+        :icon="item.icon" 
+        @click="handleButtonEvent(item.event)"
+      >
+        {{item.title}}
+      </el-button>
       <el-popconfirm v-if="deleteButton"
         title="确定删除吗？"
         @confirm="handleDelete"
@@ -92,33 +101,6 @@ export default {
         pageSize: 10
       },
       that: this,
-      // buttons:[
-      //   {
-      //     type: "primary",
-      //     size: "small",
-      //     icon: "el-icon-s-home",
-      //     title: "配货完成",
-      //     event: "", 
-      //   },{
-      //     type: "primary",
-      //     size: "small",
-      //     icon: "el-icon-s-home",
-      //     title: "出库",
-      //     event: "", 
-      //   },{
-      //     type: "danger",
-      //     size: "small",
-      //     icon: "el-icon-delete",
-      //     title: "关闭订单",
-      //     event: "", 
-      //   },{
-      //     type: "primary",
-      //     size: "small",
-      //     icon: "el-icon-plus",
-      //     title: "增加",
-      //     event: "handleAdd", 
-      //   }
-      // ]
     }
   },
 
@@ -145,10 +127,9 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
-      console.log(this.multipleSelection)
     },
     handleButtonEvent(val) {
-      this.$emit(val)
+      this.$emit(val,this.multipleSelection)
     },
     handelRow(event, index, row) {
       this.$emit(event, index, row)
